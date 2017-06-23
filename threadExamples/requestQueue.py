@@ -5,13 +5,17 @@ from request import Request
 import thread
 import threading
 import time
+import ctypes
 
 max_number_item = 10
 requestQueue = Queue( max_number_item ) 
 lock = threading.Lock()
+SYS_gettid = 186
+libc = ctypes.cdll.LoadLibrary('libc.so.6')
 
 def insertRequest( request ):
 	lock.acquire()
+	threadId = libc.syscall(SYS_gettid)
 	print("Thread " + str( threading.current_thread() ) + " acquired the lock" )
 	requestQueue.put( request )
 	lock.release()
