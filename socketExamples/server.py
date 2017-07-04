@@ -6,39 +6,60 @@ import threading
 import thread
 import time
 
-def createServerSocket( portNumber ) :
-	sock = socket.socket( socket.AF_INET, socket.SOCK_STREAM)
-	server_address = ( 'localhost', portNumber )
-	sock.bind( server_address )
-	sock.listen(1)
-	return sock
 
+class MultiThreadServer(object):
 
-sock = createServerSocket( 10002 )
+	__size__ = 1024
 
-def listenerThread():
-	try:
+	def __init__(self, host, port):
+		self.host = host
+		self.port = port
+		self.sock = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
+		self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+	def listen(self):
+		self.sock.listen(5)
+		print("Server started to listen the socket")
 		while True:
-			print >>sys.stdout, 'Waiting for a connection'
-			connection, client_address = sock.accept();
-			print >>sys.stdout, 'Connection is established with %s' %str(client_address)
-			data = connection.recv( 100 )
-			print("Data in listener thread is " + str(data))
-			thread.start_new_thread( workerThread, ( data, client_address, ) )
+			client, address = self.sock.accept()
+			print("There is a connection with " + str(address))
+			client.settimeout(60)
+			threading.Thread(target = self.listenToClient, args = (client, address ))
+
+	def listenToClient( self, client, address ):
+		while True:
+			try:
+				data = client.recv(size)
+				print("Received data is " + data )
+
+			except:
+				client.close()
+				return False
+
+
+if __name__ == "__main__":
+
+	length = len(sys.argv)
+
+	if length != 3 :
+		print( "you should enter host and port number")
+		sys.exit()
 		
-	finally:
-		connection.close()
+	host = sys.argv[1]
+
+	port_number = sys.argv[2]
+
+	try:
+		port_number = int(port_number)
+
+	except:
+		print("Port number must be an integer")
 
 
-def workerThread( data, client_address ):
-	#print >> sys.stdout, " Data received from %s  is %s " % str(client_address), data
-	print ( " Data received from client is " + str(data) )
+	server = MultiThreadServer( str(host) , port_number)
 
-
-if __name__ == "__main__" :
-	listener = thread.start_new_thread( listenerThread(), () )	
-	listener.join()
-
+	server.listen()
+	
 
 
 
