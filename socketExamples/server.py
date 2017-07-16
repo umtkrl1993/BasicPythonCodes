@@ -16,6 +16,8 @@ class MultiThreadServer(object):
 		self.port = port
 		self.sock = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
 		self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		server_address = ( self.host, self.port )
+		self.sock.bind( server_address )
 
 	def listen(self):
 		self.sock.listen(5)
@@ -24,13 +26,16 @@ class MultiThreadServer(object):
 			client, address = self.sock.accept()
 			print("There is a connection with " + str(address))
 			client.settimeout(60)
-			threading.Thread(target = self.listenToClient, args = (client, address ))
+			data = client.recv( size )
+			print( str( data ) )
+			threading.Thread( target = self.listenToClient, args = ( client, address ) )
 
 	def listenToClient( self, client, address ):
+		print( "Connection thread has been started" )
 		while True:
 			try:
-				data = client.recv(size)
-				print("Received data is " + data )
+				data = client.recv( self.__size__ )
+				print("Received data is " + str( data ) )
 
 			except:
 				client.close()
