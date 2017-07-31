@@ -1,71 +1,42 @@
 #!/usr/bin/python
 
+
+
 import socket
 import sys
-import threading
-import thread
-import time
+from thread import *
+HOST = '127.0.0.1'
+PORT = 8888
 
 
-class MultiThreadServer(object):
+s = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
 
-	__size__ = 1024
+try:
+    s.bind( ( HOST, PORT ) )
 
-	def __init__(self, host, port):
-		self.host = host
-		self.port = port
-		self.sock = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
-		self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		server_address = ( self.host, self.port )
-		self.sock.bind( server_address )
-
-	def listen(self):
-		self.sock.listen(5)
-		print("Server started to listen the socket")
-		while True:
-			client, address = self.sock.accept()
-			print("There is a connection with " + str(address))
-			client.settimeout(60)
-			data = client.recv( size )
-			print( str( data ) )
-			threading.Thread( target = self.listenToClient, args = ( client, address ) )
-
-	def listenToClient( self, client, address ):
-		print( "Connection thread has been started" )
-		while True:
-			try:
-				data = client.recv( self.__size__ )
-				print("Received data is " + str( data ) )
-
-			except:
-				client.close()
-				return False
-
-
-if __name__ == "__main__":
-
-	length = len(sys.argv)
-
-	if length != 3 :
-		print( "you should enter host and port number")
-		sys.exit()
-		
-	host = sys.argv[1]
-
-	port_number = sys.argv[2]
-
-	try:
-		port_number = int(port_number)
-
-	except:
-		print("Port number must be an integer")
-
-
-	server = MultiThreadServer( str(host) , port_number)
-
-	server.listen()
-	
+except:
+    print "Socket binding has failed"
+    sys.exit(1)
 
 
 
-	
+s.listen(10)
+
+def clientThread( conn ):
+    while True:
+        data = conn.recv( 1024 )
+        conn.sendall( "OK.." )
+        if data == "End":
+            print "Ending connection ..."
+            break
+        print data
+
+
+while 1:
+    conn, addr = s.accept()
+
+    start_new_thread( clientThread, ( conn, ) )
+
+s.close()
+
+
