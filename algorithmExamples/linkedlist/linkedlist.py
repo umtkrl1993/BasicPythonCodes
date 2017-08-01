@@ -1,4 +1,5 @@
-class listnode:
+#!/usr/bin/python
+class libtnode:
 	def __init__(self, element=None, nextNode=None):
 		self._element=element
 		self._nextNode=nextNode
@@ -18,12 +19,23 @@ class linkedlist:
 		self._head=listnode()
 		self._size=0
 
+
+        """
+        Auxilary method to implement stack using linkedlist
+        could be renamed to push
+        """
 	def prepend(self, element):
 		current=self._head.getNext()
 		newNode=listnode(element,current)
 		self._head.setNext(newNode)
 		self._size +=1
-	
+
+	def pop( self ):
+                current = self._head.getNext()
+                self._head.setNext( current.getNext )
+                self._size -= 1
+                return current
+
 	def append(self, element):
 		current = self._head.getNext()
 		previous = current	
@@ -39,19 +51,20 @@ class linkedlist:
 			return 
 		previous.setNext( newNode )
 
+        
 	def reverse(self):
-		current = self._head.getNext()
-		current_next = current.getNext()
-		current_next2 = current_next.getNext()
+                nextNode = None
+                current = self._head.getNext()
+                previousNode = None
 
-		while not current_next2 is None:
-			current_next.setNext( current )
-			current = current_next
-			current_next = current_next2
-			current_next2 = current_next2.getNext()
+                while not current is None:
+                    nextNode = current.getNext()
+                    current.setNext( previousNode )
+                    previousNode = current
+                    current = nextNode
 
-		self._head.setNext( current_next )
-		
+                self._head.setNext( previousNode )
+
 		
 	def clear(self):
 		del self._head
