@@ -16,8 +16,9 @@ class libtnode:
 
 class linkedlist:
 	def __init__(self):
-		self._head=listnode()
-		self._size=0
+		self._head =None
+                self._size = 0
+                self._tail = None 
 
 
         """
@@ -30,7 +31,7 @@ class linkedlist:
 		self._head.setNext(newNode)
 		self._size +=1
 
-	def pop( self ):
+	def dequeue( self ):
                 current = self._head.getNext()
                 self._head.setNext( current.getNext )
                 self._size -= 1
@@ -50,6 +51,7 @@ class linkedlist:
 			self._head.setNext( newNode )
 			return 
 		previous.setNext( newNode )
+                tail = newNode
 
         
 	def reverse(self):

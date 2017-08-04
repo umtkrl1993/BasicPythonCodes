@@ -39,4 +39,3 @@ class trie:
             current = current.children[index]
 
         return current.is_end
-
