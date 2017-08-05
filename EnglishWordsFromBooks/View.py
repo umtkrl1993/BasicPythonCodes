@@ -7,8 +7,13 @@ import OptionsDefinitions
 class view:
     
     def __init__(self, controller = None):
-        self._controller = controller
-        
+        if controller is None:
+            self._controller = Controller.controller()
+            
+        else:
+            self._controller = controller
+
+            
     def start_stream(self):
         selection = ""
         while True:
@@ -28,13 +33,14 @@ class view:
         """
     def save_word( self,book_name ):
         print( "Press 1 to enter a new book or ")
+        self._controller.open_book(book_name)
         while True:
             new_word = raw_input("Enter word\n")
             if new_word == "1":
                 break
             meaning = raw_input("Enter meaning\n")
             if not self._controller is None:
-                self._controller.save_word( book_name ,new_word, meaning )
+                self._controller.save_word( new_word, meaning )
     
                    
             
