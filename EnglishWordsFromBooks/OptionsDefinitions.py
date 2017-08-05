@@ -1,0 +1,5 @@
+
+
+NEW_BOOK = "1"
+OPEN_BOOK = "2"
+QUIT_PROGRAM = "3"
