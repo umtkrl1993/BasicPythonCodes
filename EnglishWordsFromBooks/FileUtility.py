@@ -44,5 +44,7 @@ class bookOperations:
                 sys.stdout.write( " " + str( len( ret[0] ) ) )
                 sys.stdout.write("\n")
                 cache.insert( ret[0] )
+                
+        return cache
         
         

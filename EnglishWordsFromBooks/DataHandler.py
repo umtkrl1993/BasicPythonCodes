@@ -16,11 +16,13 @@ class dataHandler:
     def save_word(self, new_word, meaning ):
         if ( not self._book_handler is None ) and ( not self._cache.search( new_word ) ):
             self._book_handler.save_word(new_word, meaning)
+        else:
+            print( "Can not save the word , the word is already in the file")
         
          
     def open_book(self, book_name ):
         self._book_handler = FileUtility.bookOperations( book_name )
-        self._cache = self._book_handler.fill_cache()
         self._book_handler.open_book()
+        self._cache = self._book_handler.fill_cache()
         
         
