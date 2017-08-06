@@ -34,8 +34,13 @@ class bookOperations:
     def save_word( self, new_word, meaning ):
         line = new_word + "->" + meaning + "\n"
         self._file_handler.write( line )
+       
+       # To write to hard drive immediately 
+        self._file_handler.flush()
+        os.fsync(self._file_handler.fileno())
         
     def fill_cache(self):
+        print( "******************In fill cache method*******************************************")
         cache = trie()
         with open( self._exact_file_path, "r" ) as fh:
             for line in fh :
