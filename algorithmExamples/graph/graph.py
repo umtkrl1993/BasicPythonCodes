@@ -7,22 +7,6 @@ __all__ = ["Graph"]
 __author__ = "umit aykurt"
 
 
-class Queue:
-    def __init__( self ):
-        self._que = deque()
-        
-    def enqueue( self, element ):
-        self._que.append(element)
-        
-    def dequeue( self ):
-        return self._que.popleft() 
-        
-    def __str__( self ):
-        return str( self._que )
-       
-       
-
-
 class Edge():
     
     def __init__( self, dst, weight ):
@@ -45,11 +29,8 @@ class Graph():
             self.graph[i] = []
             
         
-        
-        
     def addVertice( self, src, label ):
         self.vertices[src] = label
-        
     
         
     def addEdge( self, src, dst, weight ):
@@ -63,8 +44,18 @@ class Graph():
                 edge.weight = weight
                 return
                 
-            
         adjacency_list.append( new_edge )
+        
+        adjacency_list = self.graph[dst]
+        
+        for edge in adjacency_list:
+            if edge.dst == src:
+                edge.weight = weight
+                return
+                
+        new_edge = Edge( src, weight )
+        adjacency_list.append( new_edge )
+            
         
         
         
@@ -75,13 +66,31 @@ class Graph():
                 
 
     def getReachablewithBFS( self, start ):
-        discovered = [ 0 ]
+        search_que = deque()
+        discovered = [ 0 for i in xrange( self.vertice_number ) ]
+        
+        start_adj_list = self.graph[start]
+        
+        discovered[start] = 1
+        
+        for i in xrange( len( start_adj_list ) ):
+            search_que.append( start_adj_list[i] )
+            
+        while len( search_que ) > 0:
+            edge = search_que.popleft()
+            
+            
+            
+            
+            
+            
+            
                         
                 
                 
 
 if __name__ == "__main__":
-    """ 
+    
     graph = Graph(10)
     
     graph.addVertice( 0, "Ankara" )
@@ -98,7 +107,6 @@ if __name__ == "__main__":
     
     graph.printGraph()
     
-    """
     
             
             
